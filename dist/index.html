@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NIRF Research Score Calculator</title>
+    <script type="module" crossorigin src="/assets/index--jPVDnLm.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D7s63M8m.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left Column: Inputs -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- User Data Form -->
+                <div class="card border-t-4 border-blue-600">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800"><i class="fas fa-university mr-2 text-blue-600"></i>Your Institution Data</h2>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Faculty Count (FRQ)</label>
+                        <input type="number" id="u_faculty" class="input-field" value="684" oninput="calculateScores()">
+                        <p class="text-xs text-gray-500 mt-1">Total regular faculty members</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Total Publications (P)</label>
+                        <input type="number" id="u_publications" class="input-field" value="1230" oninput="calculateScores()">
+                        <p class="text-xs text-gray-500 mt-1">Scopus/Web of Science (3 years)</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Total Citations (CC)</label>
+                        <input type="number" id="u_citations" class="input-field" value="9850" oninput="calculateScores()">
+                        <p class="text-xs text-gray-500 mt-1">Total citations in previous 3 years</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Top 25% Papers (TOP25P)</label>
+                        <input type="number" id="u_top25" class="input-field" value="300" oninput="calculateScores()">
+                        <p class="text-xs text-gray-500 mt-1">Count of papers in Q1 Journals</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Patents (Granted + Published)</label>
+                        <input type="number" id="u_patents" class="input-field" value="41" oninput="calculateScores()">
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Avg. Annual Funding (₹ Crores)</label>
+                        <input type="number" id="u_funding" class="input-field" value="12.1" step="0.1" oninput="calculateScores()">
+                        <p class="text-xs text-gray-500 mt-1">Sponsored Research + Consultancy</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">SDG Alignment (%)</label>
+                        <input type="number" id="u_sdg" class="input-field" value="28.2" max="100" oninput="calculateScores()">
+                        <p class="text-xs text-gray-500 mt-1">% of papers mapped to SDGs</p>
+                    </div>
+                </div>
+
+                <!-- Benchmarks Toggle -->
+                <div class="card bg-gray-50">
+                    <details>
+                        <summary class="cursor-pointer font-semibold text-gray-700 flex justify-between items-center">
+                            <span><i class="fas fa-sliders-h mr-2"></i>Edit Topper Benchmarks</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </summary>
+                        <div class="mt-4 space-y-3 text-sm">
+                            <p class="text-xs text-gray-500 mb-2">These values represent the "National Topper" (Score = 100%). Adjust based on current year's leader.</p>
+                            <div>
+                                <label class="block font-medium">Topper Papers/Faculty Ratio</label>
+                                <input type="number" id="b_pub_ratio" class="input-field mt-1" value="13.0" step="0.1" oninput="calculateScores()">
+                            </div>
+                            <div>
+                                <label class="block font-medium">Topper Citations/Faculty Ratio</label>
+                                <input type="number" id="b_cit_ratio" class="input-field mt-1" value="60.0" step="0.1" oninput="calculateScores()">
+                            </div>
+                            <div>
+                                <label class="block font-medium">Topper Quality % (Q1)</label>
+                                <input type="number" id="b_q1_perc" class="input-field mt-1" value="75" step="1" oninput="calculateScores()">
+                            </div>
+                            <div>
+                                <label class="block font-medium">Topper Total Patents</label>
+                                <input type="number" id="b_patents" class="input-field mt-1" value="410" oninput="calculateScores()">
+                            </div>
+                            <div>
+                                <label class="block font-medium">Topper Avg. Funding (₹ Cr)</label>
+                                <input type="number" id="b_funding" class="input-field mt-1" value="270" oninput="calculateScores()">
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Right Column: Results & Charts -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Score Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="bg-white p-4 rounded-lg shadow text-center border-b-4 border-purple-500">
+                        <h3 class="text-sm font-bold text-gray-500">PU (Qty)</h3>
+                        <p class="text-2xl font-bold text-purple-600" id="score_pu">0.00</p>
+                        <span class="text-xs text-gray-400">Max: 30</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow text-center border-b-4 border-green-500">
+                        <h3 class="text-sm font-bold text-gray-500">QP (Quality)</h3>
+                        <p class="text-2xl font-bold text-green-600" id="score_qp">0.00</p>
+                        <span class="text-xs text-gray-400">Max: 30</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow text-center border-b-4 border-yellow-500">
+                        <h3 class="text-sm font-bold text-gray-500">IPR</h3>
+                        <p class="text-2xl font-bold text-yellow-600" id="score_ipr">0.00</p>
+                        <span class="text-xs text-gray-400">Max: 15</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow text-center border-b-4 border-red-500">
+                        <h3 class="text-sm font-bold text-gray-500">FPPP</h3>
+                        <p class="text-2xl font-bold text-red-600" id="score_fppp">0.00</p>
+                        <span class="text-xs text-gray-400">Max: 15</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow text-center border-b-4 border-indigo-500">
+                        <h3 class="text-sm font-bold text-gray-500">SDG</h3>
+                        <p class="text-2xl font-bold text-indigo-600" id="score_sdg">0.00</p>
+                        <span class="text-xs text-gray-400">Max: 10</span>
+                    </div>
+                </div>
+
+                <!-- Main Total Score -->
+                <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold">Total Research Score (RP)</h2>
+                        <p class="text-gray-400 text-sm">National Institutional Ranking Framework</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-4xl font-bold text-blue-400" id="total_score">0.00</span>
+                        <span class="text-gray-500 text-lg">/ 100</span>
+                    </div>
+                </div>
+
+                <!-- Chart Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card">
+                        <h3 class="font-bold text-gray-700 mb-4">Performance vs Topper</h3>
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <div class="card">
+                        <h3 class="font-bold text-gray-700 mb-4">Score Contribution</h3>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Analysis Box -->
+                <div class="card bg-blue-50 border border-blue-100">
+                    <h3 class="font-bold text-blue-800 mb-2"><i class="fas fa-lightbulb mr-2"></i>Quick Analysis</h3>
+                    <p id="analysis_text" class="text-sm text-blue-900 leading-relaxed">
+                        Enter your data to see insights.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let radarChart, barChart;
+
+        function initCharts() {
+            // Radar Chart
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            radarChart = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Publications (PU)', 'Quality (QP)', 'IPR', 'Funding (FPPP)', 'SDG'],
+                    datasets: [{
+                        label: 'Your Score (%)',
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        pointBackgroundColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 2
+                    }, {
+                        label: 'Topper Benchmark',
+                        data: [100, 100, 100, 100, 100],
+                        backgroundColor: 'rgba(156, 163, 175, 0.1)',
+                        borderColor: 'rgba(156, 163, 175, 0.5)',
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { display: false } // Hide internal ticks for cleaner look
+                        }
+                    }
+                }
+            });
+
+            // Bar Chart
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['PU', 'QP', 'IPR', 'FPPP', 'SDG'],
+                    datasets: [{
+                        label: 'Marks Obtained',
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: [
+                            '#9333ea', '#16a34a', '#ca8a04', '#dc2626', '#4f46e5'
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, max: 35 }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function calculateScores() {
+            // --- 1. Get Inputs ---
+            const inputs = {
+                frq: parseFloat(document.getElementById('u_faculty').value) || 1,
+                p: parseFloat(document.getElementById('u_publications').value) || 0,
+                cc: parseFloat(document.getElementById('u_citations').value) || 0,
+                top25: parseFloat(document.getElementById('u_top25').value) || 0,
+                patents: parseFloat(document.getElementById('u_patents').value) || 0,
+                funding: parseFloat(document.getElementById('u_funding').value) || 0,
+                sdg: parseFloat(document.getElementById('u_sdg').value) || 0
+            };
+
+            const benchmarks = {
+                pubRatio: parseFloat(document.getElementById('b_pub_ratio').value) || 13,
+                citRatio: parseFloat(document.getElementById('b_cit_ratio').value) || 60,
+                q1Perc: parseFloat(document.getElementById('b_q1_perc').value) || 75,
+                patents: parseFloat(document.getElementById('b_patents').value) || 410,
+                funding: parseFloat(document.getElementById('b_funding').value) || 270
+            };
+
+            // --- 2. Calculate Scores (Relative Method) ---
+
+            // PU: 30 Marks (Based on P/FRQ)
+            let myPubRatio = inputs.p / inputs.frq;
+            let pu = 30 * (myPubRatio / benchmarks.pubRatio);
+            pu = Math.min(pu, 30); // Cap at max
+
+            // QP: 30 Marks (Split into Citations & Quality)
+            // Part A: Citation Impact (15 Marks)
+            let myCitRatio = inputs.cc / inputs.frq;
+            let qp_a = 15 * (myCitRatio / benchmarks.citRatio);
+            
+            // Part B: Quality Journals (15 Marks)
+            // Topper gets 15 marks for ~75% Q1 papers. 
+            // Linear approximation: Score = 15 * (MyQ1% / TopperQ1%)
+            let myQ1Ratio = (inputs.p > 0) ? (inputs.top25 / inputs.p) * 100 : 0;
+            let qp_b = 15 * (myQ1Ratio / benchmarks.q1Perc);
+            
+            let qp = Math.min(qp_a + qp_b, 30);
+
+            // IPR: 15 Marks
+            let ipr = 15 * (inputs.patents / benchmarks.patents);
+            ipr = Math.min(ipr, 15);
+
+            // FPPP: 15 Marks
+            let fppp = 15 * (inputs.funding / benchmarks.funding);
+            fppp = Math.min(fppp, 15);
+
+            // SDG: 10 Marks (Simple Percentage Mapping)
+            // Assuming 100% alignment gets 10 marks
+            let sdg = 10 * (inputs.sdg / 100);
+            sdg = Math.min(sdg, 10);
+
+            let total = pu + qp + ipr + fppp + sdg;
+
+            // --- 3. Update UI ---
+            document.getElementById('score_pu').innerText = pu.toFixed(2);
+            document.getElementById('score_qp').innerText = qp.toFixed(2);
+            document.getElementById('score_ipr').innerText = ipr.toFixed(2);
+            document.getElementById('score_fppp').innerText = fppp.toFixed(2);
+            document.getElementById('score_sdg').innerText = sdg.toFixed(2);
+            document.getElementById('total_score').innerText = total.toFixed(2);
+
+            // --- 4. Update Charts ---
+            
+            // Radar: Convert scores to % of max marks for comparison
+            let pu_perc = (pu / 30) * 100;
+            let qp_perc = (qp / 30) * 100;
+            let ipr_perc = (ipr / 15) * 100;
+            let fppp_perc = (fppp / 15) * 100;
+            let sdg_perc = (sdg / 10) * 100;
+
+            radarChart.data.datasets[0].data = [pu_perc, qp_perc, ipr_perc, fppp_perc, sdg_perc];
+            radarChart.update();
+
+            barChart.data.datasets[0].data = [pu, qp, ipr, fppp, sdg];
+            barChart.update();
+
+            // --- 5. Dynamic Analysis Text ---
+            updateAnalysis(pu, qp, ipr, fppp, total, inputs);
+        }
+
+        function updateAnalysis(pu, qp, ipr, fppp, total, inputs) {
+            let msg = `Your current total score is <b>${total.toFixed(2)}</b>. `;
+            
+            if (inputs.frq > 500 && pu < 10) {
+                msg += `Your <b>Faculty Base (${inputs.frq})</b> is quite large, which is diluting your Publication Score (PU). To improve, you either need significantly more publications or to ensure every faculty member publishes in Scopus journals. `;
+            }
+            
+            if (fppp < 2) {
+                msg += `<b>Funding (FPPP)</b> is a weak area. The benchmark is very high (₹270 Cr). Improving consultancy revenue is the fastest way to gain fractional marks here. `;
+            } else if (fppp > 10) {
+                msg += `<b>Excellent Funding!</b> Your research grants are competitive with top institutions. `;
+            }
+
+            if (qp > pu + 5) {
+                msg += `Your <b>Quality (QP)</b> is much higher than Quantity. This is a good sign! It means your papers are getting cited well despite lower volume. `;
+            }
+
+            document.getElementById('analysis_text').innerHTML = msg;
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            initCharts();
+            calculateScores();
+        };
+    </script>
+</body>
+</html>
